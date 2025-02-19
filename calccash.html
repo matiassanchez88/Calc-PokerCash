@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Ganancia en Poker con Rake</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f9;
+        }
+        h1 {
+            text-align: center;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .input-field {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .btn {
+            width: 100%;
+            padding: 10px;
+            font-size: 18px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Calculadora de Ganancia en Poker con Rake</h1>
+
+    <div class="container">
+        <input id="manos" type="number" class="input-field" placeholder="Cantidad de manos" />
+        <input id="bb100" type="number" class="input-field" placeholder="BB/100" />
+        
+        <label for="nl">Selecciona el NL:</label>
+        <select id="nl" class="input-field">
+            <option value="0.25">NL2 (0.01/0.02)</option>
+            <option value="0.5">NL5 (0.02/0.05)</option>
+            <option value="1">NL10 (0.05/0.10)</option>
+            <option value="2">NL25 (0.10/0.25)</option>
+            <option value="5">NL50 (0.25/0.50)</option>
+            <option value="10">NL100 (0.50/1.00)</option>
+        </select>
+        
+        <input id="rake" type="number" class="input-field" placeholder="Rake (%)" step="0.01" />
+        
+        <button class="btn" onclick="calcularGanancia()">Calcular Ganancia</button>
+        
+        <div id="resultado" class="result"></div>
+    </div>
+
+    <script>
+        function calcularGanancia() {
+            const manos = document.getElementById("manos").value;
+            const bb100 = document.getElementById("bb100").value;
+            const nl = document.getElementById("nl").value;
+            const rake = document.getElementById("rake").value;
+
+            // Verificar que se hayan ingresado todos los valores
+            if (manos && bb100 && rake !== "") {
+                // Calcular ganancia en BB
+                const gananciaBB = (manos / 100) * bb100;
+
+                // Calcular ganancia en dólares (BB * valor del big blind para el NL seleccionado)
+                const valorBB = parseFloat(nl);
+                let gananciaDolares = gananciaBB * valorBB;
+
+                // Calcular el rake (se calcula sobre el total de manos jugadas, no sobre BB/100)
+                const totalRake = (manos / 100) * rake;  // Rake sobre las manos jugadas
+                gananciaDolares -= totalRake;  // Restar el rake de la ganancia en dólares
+
+                document.getElementById("resultado").textContent = 
+                    "Ganancia Aproximada: USD " + gananciaDolares.toFixed(2);
+            } else {
+                document.getElementById("resultado").textContent = "Por favor, ingresa todos los datos.";
+            }
+        }
+    </script>
+
+</body>
+</html>
